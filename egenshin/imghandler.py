@@ -65,20 +65,16 @@ def draw_text_by_line(img,
     """
     x, y = pos
     _, h = font.getsize("X")
-    if line_space is None:
-        y_add = math.ceil(1.3 * h)
-    else:
-        y_add = math.ceil(h + line_space)
+    y_add = math.ceil(1.3 * h) if line_space is None else math.ceil(h + line_space)
     draw = ImageDraw.Draw(img)
     row = ""  # 存储本行文字
     length = 0  # 记录本行长度
     for character in text:
         w, h = font.getsize(character)  # 获取当前字符的宽度
+        row += character
         if length + w * 2 <= max_length:
-            row += character
             length += w
         else:
-            row += character
             if center:
                 font_size = font.getsize(row)
                 x = math.ceil((img.size[0] - font_size[0]) / 2)
@@ -191,7 +187,7 @@ async def text_image(raw_str: str):
         else:
             x_drow_duanluo, x_drow_note_height, x_drow_line_height, x_drow_height = split_text(msg)
             drow_height += x_drow_height
-            
+
     im = Image.new("RGB", (1080, drow_height), '#f9f6f2')
     draw = ImageDraw.Draw(im)
     # 左上角开始
@@ -208,7 +204,7 @@ async def text_image(raw_str: str):
             for duanluo, line_count in drow_duanluo:
                 draw.text((x, y), duanluo, fill=(0, 0, 0), font=w65)
                 y += drow_line_height * line_count
-                
+
     _x, _y = w65.getsize("囗")
     padding = (_x, _y, _x, _y)
     im = ImageOps.expand(im, padding, '#f9f6f2')
